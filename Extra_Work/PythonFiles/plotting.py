@@ -64,3 +64,5 @@ def reshape_by_component(f, *x):
     reshapes a function f by the dimensions of it's consituent components *x
     """
     return f.reshape(*[len(i) for i in x])
+
+# added comment for testing purposes
