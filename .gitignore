@@ -1,3 +1,9 @@
+# Description items
+# -----------------
+
+# train --> folder created by tensorflow
+# structured_data_classifier --> folder created by autokeras
+
 .DS_Store
 *checkpoint.ipynb
 tensile_strength.csv
@@ -5,3 +11,5 @@ __pycache__
 *.idea
 dataset1.csv
 dataset2.csv
+structured_data_classifier
+train
