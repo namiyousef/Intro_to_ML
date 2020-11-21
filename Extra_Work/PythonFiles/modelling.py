@@ -6,6 +6,7 @@ from tensorflow.keras.utils import plot_model
 import matplotlib.pyplot as plt
 from sklearn.model_selection import KFold
 import numpy as np
+import matplotlib.pyplot as plt
 #tf.random.set_seed(1)
 
 class FeedForward():
@@ -36,29 +37,56 @@ class FeedForward():
         plt.show()
 
 class evaluate_models(FeedForward):
-    def __init__(self, model):
+    def __init__(self, model, compiler, X_train, X_test, y_train, y_test):
         super().__init__()
-        self.model = model
+        self.uncompiled_model = model
+        self.compiler = compiler
+        self.model = compiler(model)
+        self.X_train = X_train
+        self.X_test = X_test
+        self.y_train = y_train
+        self.y_test = y_test
 
-    def cross_validate(self,X_train, X_test, y_train, y_test, K = 5):
-        acc_per_fold = []
-        loss_per_fold = []
-        X = np.concatenate((X_train, X_test), axis = 0)
-        y = np.concatenate((y_train, y_test), axis = 0)
+    def fit(self,*args, **kwargs):
+        history = self.model.fit(
+            self.X_train if not args else args[0],
+            self.y_train if not args else args[1],
+            **kwargs)
+        return history
+
+    def compile(self):
+        self.model = self.compiler(self.model)
+
+    def cross_validate(self, K = 5, **kwargs):
+        scores = []
+        histories = []
+        X = np.concatenate((self.X_train, self.X_test), axis = 0)
+        y = np.concatenate((self.y_train, self.y_test), axis = 0)
         for train, test in KFold(n_splits=K, shuffle=True).split(X,y):
-            self.model.fit(X[train], y[train], epochs = 250, verbose = 0)
-            scores = self.model.evaluate(X[test], y[test], verbose = 1)
-            acc_per_fold.append(scores[1])
-            loss_per_fold.append(scores[0])
-        print(sum(acc_per_fold)/len(acc_per_fold),sum(loss_per_fold)/len(loss_per_fold))
+            self.compile()
+            histories.append(self.fit(X[train], y[train], **kwargs).history)
+            scores.append(self.model.evaluate(X[test], y[test], verbose = 1))
+        print("average loss: ", np.asarray(scores)[:,0].mean())
+        print("average accuracy: ", np.asarray(scores)[:,1].mean()) # make sure that accuracy is the first metric in compile
+        return scores, histories
+
+    def plot_histories(self, histories, metrics = ['loss', 'accuracy']):
+        fig, axes = plt.subplots(nrows = len(metrics) % 2 + 1, ncols = 2)
+        axes = axes.reshape(len(metrics) % 2 + 1, 2)
+        for i,metric in enumerate(metrics):
+            for history in histories:
+                axes[(i+2)//2 - 1, 1 - (i+1)%2].plot(history[metric])
+            plt.legend([i for i in range(len(histories))])
 
 
-    def evaluate(self, X_train, X_test, y_train, y_test):
-        scores = [[] for i in range(4)] # note, 4 --> length of metrics!
+    def evaluate(self, **kwargs):
+        history_temp = self.fit()
+        keys = history_temp.history.keys()
+        scores = [[] for i in range(4)]
         start = time()
         for j in range(1):
-            self.model.fit(X_train, y_train, epochs=1000, verbose=1)
-            score = self.model.evaluate(X_test, y_test, verbose=0)
+            self.fit(self.X_train, self.y_train, **kwargs)
+            score = self.model.evaluate(self.X_test, self.y_test, verbose=1)
             for i in range(4):
                 scores[i].append(score[i])
         scores = [sum(s)/len(s) for s in scores]
@@ -92,6 +120,6 @@ def compile_model():
     )
     return model
 
-instance = evaluate_models(
-    compile_model()
-)
+#instance = evaluate_models(
+#    compile_model()
+#)
