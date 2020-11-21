@@ -25,5 +25,9 @@ def scale_data(data, mode="standard"):
         scalers[0, :] = 0
         scalers[1:] = abs(data).max(axis=0)
         scaled = (data) / scalers[1, :]
+    elif mode == "robust":
+        scalers[0, :] = data.median(axis=0)
+        scalers[1, :] = data.quantile(0.75, axis=0) - data.quantile(0.25, axis = 0)
+        scaled = (data - scalers[0, :]) / scalers[1, :]
 
     return scaled, scalers
