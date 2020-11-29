@@ -10,10 +10,10 @@ from keras.utils import to_categorical
 
 # user defined parameters (change these as necessary):
 # put your name here:
-givenname = 'Peter'
-familyname = 'Huthwaite'
+givenname = 'Yousef'
+familyname = 'Nami'
 # set which dataset to use:
-dataset = 1
+dataset = 2
 
 filebase = familyname.lower()+'-'+givenname.lower()+'-'+np.str(dataset)
 # load in student model
@@ -28,7 +28,7 @@ else:
 
 # load in the data provided to the students
 df = pd.read_csv('dataset' + np.str(dataset) + '.csv')
-
+print(df.head())
 Lt = np.array(df['Arm length (m)'][:])
 Wt = np.array(df['Ball weight (kg)'][:])
 Rt = np.array(df['Ball radius (mm)'][:])
@@ -46,7 +46,7 @@ Yt = to_categorical(Ot)
 Yt_predict = model.predict(Xt)
 
 # output a summary of the model if you wish
-# model.summary()
+print(model.summary())
 
 
 number_correct = 0
@@ -55,7 +55,7 @@ for i in range(len(Yt)):
         number_correct += 1
 
 fraction_correct = 1.0 * number_correct / len(Yt_predict)
-
+print(fraction_correct)
 
 if fraction_correct < 0.6:
     print('Warning: very poor performance on provided data; likely error')
