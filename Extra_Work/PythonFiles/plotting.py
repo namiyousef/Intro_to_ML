@@ -57,7 +57,8 @@ def plot_classes(X,y, ax = None, **kwargs):
     else:
         fig, ax = plt.subplots()
     for y_unique in np.unique(y):
-        plt.plot(X[y == y_unique, 0], X[y == y_unique, 1], '.')
+        ax.plot(X[y == y_unique, 0], X[y == y_unique, 1], '.')
+    return fig, ax
 
 def reshape_by_component(f, *x):
     """
