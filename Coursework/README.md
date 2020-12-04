@@ -1,3 +1,38 @@
+# Contents of directory
+
+## Directories
+
+**Submission:** includes models for datasets, and relevant scaling parameters
+
+## Notebooks
+
+**Model1.ipynb:** initial testing conducted on dataset 1
+
+**Model2.ipynb:** initial testing conducted on dataset 2
+
+**TestingEvaluate_Model1.ipynb:** notebook for testing model1
+
+**TestingEvaluateClass.ipynb:** main notebook for testing
+
+**TestingEvaluateClass_Model2_withDuplicatesRemoved.ipynb:** this was for testing model2 with the duplicate (collinear) attributes removed
+
+**TestingEvaluateClass_TestingZone.ipynb:** notebook for testing at later stages of the project
+
+**TestingWithGans.ipynb:** (currently not developed) notebook for using Gans to amplify that data sources
+
+**KerasVersion.ipynb:** (currently not developed) notebook to save TensorFlow models as Keras models
+
+**EDA.ipynb:** initial EDA performed on the datasets
+
+**Distributions.ipynb:** a notebook for checking the distributions in the data
+
+
+
+
+
+
+
+
 # Useful links
 
 1. **Types of NN activation functions:** https://missinglink.ai/guides/neural-network-concepts/7-types-neural-network-activation-functions-right/
