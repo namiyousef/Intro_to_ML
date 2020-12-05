@@ -120,6 +120,19 @@ def compile_model():
     )
     return model
 
-#instance = evaluate_models(
-#    compile_model()
-#)
+def cross_validate(model, *data, K = 5, **kwargs):
+
+    """" design this such that the model will be reconfigured automatically
+    each time! Make it robust so that it can include neural networks as well!
+    Also learn how to do GridSearch!!
+    """
+    if len(data) == 2:
+        X = data[0]
+        y = data[1]
+    elif len(data) == 4:
+        X = np.concatenate((data[0], data[1]), axis = 0)
+        y = np.concatenate((data[2], data[3]), axis = 0)
+    for train, test in KFold(n_splits=K, shuffle=True).split(X, y):
+
+        histories.append(self.fit(X[train], y[train], **kwargs).history)
+        scores.append(self.model.evaluate(X[test], y[test], verbose=1))
