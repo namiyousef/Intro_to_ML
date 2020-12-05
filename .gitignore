@@ -11,5 +11,6 @@ __pycache__
 *.idea
 dataset1.csv
 dataset2.csv
+volts.csv
 structured_data_classifier
 train
