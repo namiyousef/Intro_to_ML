@@ -12,5 +12,7 @@ __pycache__
 dataset1.csv
 dataset2.csv
 volts.csv
+slip_data.csv
+slip_data_full.csv
 structured_data_classifier
 train
