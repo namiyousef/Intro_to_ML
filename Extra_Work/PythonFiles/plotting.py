@@ -39,11 +39,13 @@ def gridspacer(*gridparams, mu = [0,0]):
     return lines, X_grid, axes
 
 
-def plot_classes(X,y, ax = None, **kwargs):
+def plot_classes(X,y, vars = None, **kwargs):
 
-    """ Given X and y, where X represents the X values (in 2D) and y the classes, plots outcomes
+    """
+    Given X and y, where X represents the X values and y the classes, plots outcomes
     with different colors.
 
+    I want to have the option of choosing which variables to plot against each other
     NOTE:
     -----
     - lacks the use of **kwargs *args properly
@@ -52,13 +54,32 @@ def plot_classes(X,y, ax = None, **kwargs):
     - only 2 dimensional
 
     """
-    if ax:
-        pass
+    if vars:
+        pass # here add code for custom variables
     else:
-        fig, ax = plt.subplots()
-    for y_unique in np.unique(y):
-        ax.plot(X[y == y_unique, 0], X[y == y_unique, 1], '.')
-    return fig, ax
+        ncols = int(X.shape[1] ** (1/2))
+        nrows = X.shape[1] // ncols
+
+    fig, axes = plt.subplots(nrows = nrows, ncols = ncols, figsize = (nrows * 8, ncols * 8))
+    feature_1 = 0
+    feature_2 = feature_1 + 1
+    for j, column in enumerate(axes):
+        for i, row in enumerate(column):
+            for y_unique in np.unique(y):
+                axes[j,i].plot(
+                    X[y == y_unique, feature_1],
+                    X[y == y_unique, feature_2],
+                    '.'
+                )
+                axes[j,i].set_xlabel('Feature {}'.format(feature_1))
+                axes[j,i].set_ylabel('Feature {}'.format(feature_2))
+
+            feature_2 += 1
+            if feature_2 >= X.shape[1]:
+                feature_1 += 1
+                feature_2 = feature_1 + 1
+    plt.legend([*np.unique(y)])
+    return fig, axes
 
 def reshape_by_component(f, *x):
     """
